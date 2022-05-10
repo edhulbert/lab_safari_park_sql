@@ -77,4 +77,58 @@ INSERT INTO assignments (employee_id, enclosure_id, day) VALUES (5, 2, 'Wednesda
 INSERT INTO assignments (employee_id, enclosure_id, day) VALUES (1, 1, 'Monday');
 INSERT INTO assignments (employee_id, enclosure_id, day) VALUES (2, 4, 'Friday');
 INSERT INTO assignments (employee_id, enclosure_id, day) VALUES (5, 3, 'Saturday');
+INSERT INTO assignments (employee_id, enclosure_id, day) VALUES (1, 2, 'Sunday');
 
+SELECT enclosures.name, employees.name
+FROM enclosures
+INNER JOIN assignments
+ON enclosures.id = assignments.enclosure_id
+INNER JOIN employees
+ON assignments.employee_id = employees.id
+WHERE enclosures.name = 'Big Cat Field';
+
+SELECT enclosures.name, animals.name
+FROM enclosures
+INNER JOIN animals
+ON enclosures.id = animals.enclosure_id
+WHERE enclosures.name = 'Bird Cage';
+
+SELECT enclosures.name, enclosures.closed_for_maintenance, employees.name
+FROM enclosures
+INNER JOIN assignments
+ON enclosures.id = assignments.enclosure_id
+INNER JOIN employees
+ON assignments.employee_id = employees.id
+WHERE enclosures.closed_for_maintenance = TRUE;
+
+SELECT enclosures.name, animals.name, MAX(animals.age)
+FROM enclosures
+INNER JOIN animals
+ON enclosures.id = animals.enclosure_id
+GROUP BY enclosures.name, animals.name
+ORDER BY MAX(animals.age) DESC, animals.name
+LIMIT 1;
+
+SELECT employees.name, COUNT (DISTINCT animals.type)
+FROM employees
+INNER JOIN assignments
+ON employees.id = assignments.employee_id
+INNER JOIN animals
+ON assignments.enclosure_id = animals.enclosure_id
+WHERE employees.name = 'Colin'
+GROUP BY employees.name;
+
+SELECT enclosures.name, COUNT(DISTINCT employees.name)
+FROM enclosures
+INNER JOIN assignments
+ON enclosures.id = assignments.enclosure_id
+INNER JOIN employees
+ON assignments.employee_id = employees.id
+WHERE enclosures.name = 'Reptile House'
+GROUP BY enclosures.name; 
+
+SELECT animals.name
+FROM animals
+INNER JOIN enclosures
+ON animals.enclosure_id = enclosures.id
+WHERE enclosures.id IN (SELECT animals.enclosure_id FROM animals WHERE animals.name = 'Terry');
